@@ -2,24 +2,7 @@
     <header id="header" class="pb-3">
         <div class="container">
             <MainMenu />
-            <div>
-                <div class="input-group input-group-lg">
-                    <input
-                        id="search-box"
-                        class="form-control"
-                        placeholder="Name / UUID / Server / Skin"
-                        autocomplete="off"
-                        spellcheck="false"
-                    />
-                    <button
-                        class="btn btn-primary"
-                        type="submit"
-                        title="Search"
-                    >
-                        <FontAwesomeIcon icon="search" />
-                    </button>
-                </div>
-            </div>
+            <SearchCard />
             <div
                 class="d-flex gap-2 align-items-center alert alert-warning fade show mb-0 mt-3"
                 role="alert"
@@ -44,16 +27,11 @@
             </div>
         </div>
     </header>
-    <main class="container pt-3">
+    <main class="container pt-3" v-if="this.player">
         <div class="row align-items-start flex-wrap-reverse gx-3">
             <div class="col-auto">
                 <h1 class="text-nowrap" translate="no" style="">
-                    james090500<img
-                        class="emoji"
-                        draggable="false"
-                        src="https://s.namemc.com/img/emoji/twitter/1f5a5-fe0f.svg"
-                        alt="🖥️"
-                    />
+                    {{ this.player.username }}
                 </h1>
             </div>
         </div>
@@ -89,13 +67,13 @@
                             <div class="col-12 order-lg-2 col-lg">
                                 <select id="uuid-select" class="form-select">
                                     <option value="standard" selected="">
-                                        ba4161c0-3a42-496c-8ae0-7d13372f3371
+                                        {{ this.player.uuid }}
                                     </option>
                                     <option value="hyphenless">
-                                        ba4161c03a42496c8ae07d13372f3371
+                                        {{ this.player.uuid.replace(/-/g, '') }}
                                     </option>
                                     <option value="int-array">
-                                        [I;-1170120256,977422700,-1964999405,925840241]
+                                        {{ uuidToIntArray(this.player.uuid) }}
                                     </option>
                                 </select>
                             </div>
@@ -157,9 +135,13 @@
                     >
                         <table class="table table-borderless mb-0">
                             <tbody>
-                                <tr>
+                                <tr
+                                    v-for="(username, key) in this.player
+                                        .usernames"
+                                    :key="username.id"
+                                >
                                     <td width="1" class="text-center fw-bold">
-                                        3
+                                        {{ this.player.usernames.length - key }}
                                     </td>
 
                                     <td
@@ -167,119 +149,56 @@
                                         style="max-width: 0"
                                         class="text-nowrap text-ellipsis"
                                     >
-                                        <a class="" href="#">james090500</a>
+                                        <a href="#">{{ username.username }}</a>
                                     </td>
-
                                     <td
+                                        v-if="!username.changed_at"
+                                        class="d-none d-lg-table-cell"
+                                        colspan="6"
+                                    ></td>
+                                    <td
+                                        v-if="username.changed_at"
                                         width="20%"
                                         class="d-none d-lg-table-cell text-end text-nowrap pe-0"
                                     >
-                                        <time
-                                            datetime="2015-03-07T11:43:51.000Z"
-                                            data-type="date"
-                                            >07/03/2015</time
-                                        >
+                                        <time>{{
+                                            dateFormat(username.changed_at)
+                                        }}</time>
                                     </td>
                                     <td
+                                        v-if="username.changed_at"
                                         width="1"
                                         class="d-none d-lg-table-cell text-center px-1"
                                     >
                                         •
                                     </td>
                                     <td
+                                        v-if="username.changed_at"
                                         width="1"
                                         class="d-none d-lg-table-cell text-left text-nowrap p-0"
                                     >
-                                        <time
-                                            datetime="2015-03-07T11:43:51.000Z"
-                                            data-type="time"
-                                            >11:43:51</time
-                                        >
+                                        <time>{{
+                                            timeFormat(username.changed_at)
+                                        }}</time>
                                     </td>
 
                                     <td
+                                        v-if="username.changed_at"
                                         class="d-none d-lg-table-cell"
                                         colspan="2"
                                     ></td>
-
                                     <td
+                                        v-if="username.changed_at"
                                         width="10%"
                                         class="d-none d-lg-table-cell text-center"
-                                    >
-                                        11<small>y</small>
-                                    </td>
-
-                                    <td class="text-end text-nowrap px-0"></td>
-                                    <td class="text-end text-nowrap ps-0">
-                                        <a
-                                            class="copy-button px-1"
-                                            href="#"
-                                            data-clipboard-text="james090500"
-                                            >Copy</a
-                                        >
-                                    </td>
-                                </tr>
-                                <tr class="d-lg-none border-bottom">
-                                    <td colspan="3">
-                                        <time
-                                            datetime="2015-03-07T11:43:51.000Z"
-                                            >07/03/2015 • 11:43:51</time
-                                        >
-                                    </td>
-                                    <td class="text-end">11<small>y</small></td>
-                                </tr>
-
-                                <tr>
-                                    <td width="1" class="text-center fw-bold">
-                                        2
-                                    </td>
-
-                                    <td
-                                        width="100%"
-                                        style="max-width: 0"
-                                        class="text-nowrap text-ellipsis"
-                                    >
-                                        <a href="#">TheSexySlime</a>
-                                    </td>
-
-                                    <td
-                                        width="20%"
-                                        class="d-none d-lg-table-cell text-end text-nowrap pe-0"
-                                    >
-                                        <time
-                                            datetime="2015-02-04T15:44:22.000Z"
-                                            data-type="date"
-                                            >04/02/2015</time
-                                        >
-                                    </td>
-                                    <td
-                                        width="1"
-                                        class="d-none d-lg-table-cell text-center px-1"
-                                    >
-                                        •
-                                    </td>
-                                    <td
-                                        width="1"
-                                        class="d-none d-lg-table-cell text-left text-nowrap p-0"
-                                    >
-                                        <time
-                                            datetime="2015-02-04T15:44:22.000Z"
-                                            data-type="time"
-                                            >15:44:22</time
-                                        >
-                                    </td>
-
-                                    <td
-                                        class="d-none d-lg-table-cell"
-                                        colspan="2"
+                                        v-html="
+                                            lengthFormat(
+                                                username.changed_at,
+                                                player.usernames[key + 1]
+                                                    ?.changed_at ?? new Date()
+                                            )
+                                        "
                                     ></td>
-
-                                    <td
-                                        width="10%"
-                                        class="d-none d-lg-table-cell text-center"
-                                    >
-                                        30<small>d</small>
-                                    </td>
 
                                     <td class="text-end text-nowrap px-0"></td>
                                     <td class="text-end text-nowrap ps-0">
@@ -290,52 +209,6 @@
                                             >Copy</a
                                         >
                                     </td>
-                                </tr>
-                                <tr class="d-lg-none border-bottom">
-                                    <td colspan="3">
-                                        <time
-                                            datetime="2015-02-04T15:44:22.000Z"
-                                            >04/02/2015 • 15:44:22</time
-                                        >
-                                    </td>
-                                    <td class="text-end">30<small>d</small></td>
-                                </tr>
-
-                                <tr>
-                                    <td width="1" class="text-center fw-bold">
-                                        1
-                                    </td>
-
-                                    <td
-                                        width="100%"
-                                        style="max-width: 0"
-                                        class="text-nowrap text-ellipsis"
-                                    >
-                                        <a
-                                            class=""
-                                            translate="no"
-                                            href="/search?q=james090500"
-                                            >james090500</a
-                                        >
-                                    </td>
-
-                                    <td
-                                        class="d-none d-lg-table-cell"
-                                        colspan="6"
-                                    ></td>
-
-                                    <td class="text-end text-nowrap px-0"></td>
-                                    <td class="text-end text-nowrap ps-0">
-                                        <a
-                                            class="copy-button px-1"
-                                            href="javascript:void(0)"
-                                            data-clipboard-text="james090500"
-                                            >Copy</a
-                                        >
-                                    </td>
-                                </tr>
-                                <tr class="d-lg-none">
-                                    <td colspan="2"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -349,7 +222,7 @@
                     <ul class="card-header nav px-2 py-0" role="tablist">
                         <li class="nav-item">
                             <button class="nav-link px-2 py-1 active">
-                                Following (6)
+                                Following (1)
                             </button>
                         </li>
 
@@ -369,47 +242,16 @@
                             <span
                                 class="position-absolute top-0 end-0 px-3 py-1"
                             >
-                                <a
-                                    class="ps-2"
-                                    href="/profile/james090500.1/following"
+                                <a class="ps-2" href="#"
                                     ><font-awesome-icon icon="arrow-right"
                                 /></a>
                             </span>
-
-                            <a translate="no" href="/profile/Loorem.2" class=""
-                                >Loorem</a
-                            >
-
                             <a
                                 translate="no"
-                                href="/profile/BooSullivan223.1"
-                                class="fw-bold"
-                                >BooSullivan223</a
-                            >
-
-                            <a translate="no" href="/profile/Faavz.1" class=""
-                                >Faavz</a
-                            >
-
-                            <a
-                                translate="no"
-                                href="/profile/CapeCraft.4"
-                                class="fw-bold"
-                                >CapeCraft</a
-                            >
-
-                            <a
-                                translate="no"
-                                href="/profile/N1nten.4"
-                                class="fw-bold"
-                                >N1nten</a
-                            >
-
-                            <a
-                                translate="no"
-                                href="/profile/MiniPixie.1"
-                                class="fw-bold"
-                                >MiniPixie</a
+                                href="https://namemc.com/profile/james090500.1"
+                                target="_blank"
+                                class=""
+                                >james090500</a
                             >
                         </div>
                     </div>
@@ -432,12 +274,13 @@
                 </div>
             </div>
             <div class="col-md-auto order-md-1">
-                <SkinViewerCard ref="skin-viewer" />
-                <SkinCard />
+                <SkinViewerCard ref="skin-viewer" :uuid="this.player.uuid" />
+                <SkinCard :uuid="this.player.uuid" />
                 <CapeCard
                     @load-cape="
                         (url) => this.$refs['skin-viewer'].loadCape(url)
                     "
+                    :username="this.player.username"
                 />
                 <OtherCards />
             </div>
@@ -457,22 +300,86 @@ td:first-child {
 td:last-child {
     padding-right: 1rem !important;
 }
+
+.player-list > a:not(:last-of-type) {
+    margin-right: 0.25rem;
+}
 </style>
 
 <script>
 import MainMenu from '@/partials/fake/MainMenu.vue'
+import SearchCard from '@/partials/fake/SearchCard.vue'
 import SkinViewerCard from '@/partials/fake/SkinViewerCard.vue'
 import SkinCard from '@/partials/fake/SkinCard.vue'
 import CapeCard from '@/partials/fake/CapeCard.vue'
 import OtherCards from '@/partials/fake/OtherCards.vue'
+import axios from 'axios'
+import {
+    format,
+    differenceInYears,
+    differenceInMonths,
+    differenceInDays,
+} from 'date-fns'
 
 export default {
+    data() {
+        return {
+            player: null,
+        }
+    },
+    created() {
+        axios
+            .get(`https://api.crafty.gg/api/v2/players/${this.user}`)
+            .then((response) => {
+                this.player = response.data.data
+            })
+    },
+    methods: {
+        uuidToIntArray(uuid) {
+            const hex = uuid.replace(/-/g, '')
+
+            const array = [
+                parseInt(hex.slice(0, 8), 16) | 0,
+                parseInt(hex.slice(8, 16), 16) | 0,
+                parseInt(hex.slice(16, 24), 16) | 0,
+                parseInt(hex.slice(24, 32), 16) | 0,
+            ]
+
+            return `[I;${array.join(',')}]`
+        },
+        dateFormat(date) {
+            return format(new Date(date), 'dd/MM/yyyy')
+        },
+        timeFormat(date) {
+            return format(new Date(date), 'HH:mm:SS')
+        },
+        lengthFormat(oldDate, newDate) {
+            const start = new Date(oldDate)
+            const end = new Date(newDate)
+
+            const years = differenceInYears(end, start)
+            if (years >= 1) return `${years}<small>y</small>`
+
+            const months = differenceInMonths(end, start)
+            if (months >= 1) return `${months}<small>m</small>`
+
+            const days = differenceInDays(end, start)
+            return `${days}<small>d</small>`
+        },
+    },
     components: {
         MainMenu,
+        SearchCard,
         SkinViewerCard,
         SkinCard,
         CapeCard,
         OtherCards,
+    },
+    props: {
+        user: {
+            type: String,
+            default: null,
+        },
     },
 }
 </script>

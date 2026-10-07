@@ -1,10 +1,9 @@
 import { createApp } from 'vue'
-// import 'bootstrap/dist/css/bootstrap.min.css'
 import FakeNameMC from './FakeNameMC.vue'
 
 const app = createApp(FakeNameMC)
 
-/* import the fontawesome core */
+// Font Awesome
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -19,5 +18,9 @@ import {
 library.add(faSun, faMoon, faSearch, faPlay, faArrowRight)
 
 app.component('FontAwesomeIcon', FontAwesomeIcon)
+
+// Router
+import Router from './router.js'
+app.use(Router)
 
 app.mount('#app')

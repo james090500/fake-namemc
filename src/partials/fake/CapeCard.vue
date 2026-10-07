@@ -20,6 +20,7 @@
                         :class="{ 'd-none': !cape.active }"
                         width="40"
                         height="64"
+                        type="official"
                         :data-cape-url="cape.url"
                         @mouseover="$emit('load-cape', cape.url)"
                     ></canvas
@@ -33,8 +34,7 @@
             </div>
         </div>
     </div>
-
-    <div class="card mb-3">
+    <div class="card mb-3" :class="{ 'd-none': !optifine }">
         <div class="card-header py-1">
             <strong
                 ><a
@@ -57,7 +57,7 @@
                     class="cape-2d align-top skin-button"
                     width="40"
                     height="64"
-                    data-optifine-cape="f390d94d6a05403e"
+                    type="optifine"
                 ></canvas>
             </a>
         </div>
@@ -73,10 +73,21 @@ export default {
         return {
             edit: false,
             capes: [],
+            optifine: false,
         }
     },
     mounted() {
-        this.loadCapes()
+        axios.get('https://capes.me/api/capes').then((response) => {
+            this.capes = response.data.map((cape) => ({
+                title: cape.title,
+                url: cape.url,
+                active: true,
+            }))
+
+            this.$nextTick(() => this.renderCapes())
+        })
+
+        this.renderOptiFine()
     },
     methods: {
         toCanvas(image, x, y, w, h) {
@@ -90,17 +101,6 @@ export default {
 
             return canvas
         },
-        loadCapes() {
-            axios.get('https://capes.me/api/capes').then((response) => {
-                this.capes = response.data.map((cape) => ({
-                    title: cape.title,
-                    url: cape.url,
-                    active: true,
-                }))
-
-                this.$nextTick(() => this.renderCapes())
-            })
-        },
         editCapes() {
             this.edit = !this.edit
             if (!this.edit) {
@@ -108,7 +108,9 @@ export default {
             }
         },
         renderCapes() {
-            const elements = document.querySelectorAll('.cape-2d')
+            const elements = document.querySelectorAll(
+                '.cape-2d[type="official"]'
+            )
 
             for (const element of elements) {
                 const image = new Image()
@@ -124,6 +126,29 @@ export default {
 
                 image.src = element.dataset.capeUrl
             }
+        },
+        renderOptiFine() {
+            const element = document.querySelector('.cape-2d[type="optifine"]')
+            const image = new Image()
+
+            image.onload = () => {
+                const cape = this.toCanvas(image, 2, 2, 20, 32)
+
+                const ctx = element.getContext('2d')
+                ctx.imageSmoothingEnabled = false
+
+                ctx.drawImage(cape, 0, 0, element.width, element.height)
+
+                this.optifine = true
+            }
+
+            image.src = `http://s.optifine.net/capes/${this.username}.png`
+        },
+    },
+    props: {
+        username: {
+            type: String,
+            default: 'Steve',
         },
     },
 }

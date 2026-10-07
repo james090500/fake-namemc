@@ -48,7 +48,13 @@ export default {
                 ctx.drawImage(skin, 0, 0, element.width, element.height)
             }
 
-            image.src = `https://crafthead.net/helm/james090500/32`
+            image.src = `https://crafthead.net/helm/${this.uuid}/32`
+        },
+    },
+    props: {
+        uuid: {
+            type: String,
+            default: 'Steve',
         },
     },
 }

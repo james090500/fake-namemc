@@ -40,13 +40,19 @@ export default {
     mounted() {
         this.minecraftSkinViewer = new MinecraftSkinViewer({
             canvas: document.getElementById('minecraft-skin-viewer'),
-            animated: true,
-            skin: `https://crafthead.net/skin/james090500`,
+            animate: true,
+            skin: `https://api.crafty.gg/api/v2/skins/${this.uuid}/raw`,
         })
     },
     methods: {
         loadCape(url) {
             this.minecraftSkinViewer.loadCape(url)
+        },
+    },
+    props: {
+        uuid: {
+            type: String,
+            default: 'Steve',
         },
     },
 }
