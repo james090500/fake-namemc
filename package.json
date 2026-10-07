@@ -1,0 +1,42 @@
+{
+    "name": "fake-namemc",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite dev",
+        "build": "npm run lint:check && vite build",
+        "preview": "npm run build && vite preview",
+        "format": "npm run lint && npm run prettier",
+        "lint": "eslint . --fix",
+        "lint:check": "eslint .",
+        "prettier": "prettier . --write",
+        "bump": "ncu -u && npm update && npm i && npm ci"
+    },
+    "dependencies": {
+        "@fortawesome/free-brands-svg-icons": "^7.3.1",
+        "@fortawesome/free-regular-svg-icons": "^7.3.1",
+        "@fortawesome/free-solid-svg-icons": "^7.3.1",
+        "@fortawesome/vue-fontawesome": "^3.3.3",
+        "axios": "^1.20.0",
+        "bootstrap": "^5.3.8",
+        "minecraft-skin-viewer": "^0.0.26",
+        "vue": "^3.5.43"
+    },
+    "devDependencies": {
+        "@cloudflare/vite-plugin": "^1.63.0",
+        "@vitejs/plugin-vue": "^6.0.9",
+        "eslint": "^10.12.0",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-prettier": "^5.5.6",
+        "eslint-plugin-vue": "^10.11.1",
+        "npm-check-updates": "^23.1.0",
+        "vite": "^8.3.3",
+        "vite-plugin-eslint": "^1.8.1",
+        "wrangler": "^4.148.0"
+    },
+    "allowScripts": {
+        "esbuild@0.28.1": true,
+        "workerd@1.20261001.1": true
+    }
+}
